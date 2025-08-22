@@ -1,0 +1,11 @@
+Django>=4.2         # your Django version
+djangorestframework>=3.14
+drf-yasg>=1.21.6
+PyYAML>=6.0
+coreapi>=2.3.3
+coreschema>=0.0.4
+psycopg2-binary>=2.9,<3
+djangorestframework-simplejwt
+Faker==25.9.1   # or latest stable version
+
+

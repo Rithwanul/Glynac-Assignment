@@ -1,0 +1,54 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15
+    container_name: postgres_db
+    environment:
+      POSTGRES_DB: crud
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+    ports:
+      - "5432:5432"
+    volumes:
+      - /media/dico/Important/Python-Projects/Assignment/postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: root@root.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  web:
+    build:
+      context: /media/dico/Important/Python-Projects/Assignment
+      dockerfile: Dockerfile
+    container_name: web
+    working_dir: /app
+    command: >
+      sh -c "./wait-for-db.sh db:5432 &&
+             python manage.py migrate &&
+             python manage.py populate_initial_data &&
+             python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - /media/dico/Important/Python-Projects/Assignment:/app
+    ports:
+      - "8000:8000"
+    environment:
+      DJANGO_SETTINGS_MODULE: hr_book.settings
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      DATABASE_NAME: crud
+      DATABASE_USER: root
+      DATABASE_PASSWORD: root
+    depends_on:
+      - db
+    restart: unless-stopped
+
