@@ -7,5 +7,6 @@ coreschema>=0.0.4
 psycopg2-binary>=2.9,<3
 djangorestframework-simplejwt
 Faker==25.9.1   # or latest stable version
+django-filter>=23.0
 
 

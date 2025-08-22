@@ -19,12 +19,12 @@ class Employee(models.Model):
     gender = models.CharField(max_length=10)
 
 class Attendance(models.Model):
-    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name="attendances")
     date = models.DateField()
     status = models.CharField(max_length=10)  # Present/Absent
-    check_in_time = models.TimeField()
-    check_out_time = models.TimeField()
-    work_hours = models.FloatField()
+    check_in_time = models.TimeField(null=True, blank=True)
+    check_out_time = models.TimeField(null=True, blank=True)
+    work_hours = models.FloatField(null=True, blank=True)
 
 class Performance(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
@@ -33,5 +33,6 @@ class Performance(models.Model):
     rating = models.IntegerField()
     bonus = models.FloatField()
     remarks = models.TextField()
-    late_days = models.IntegerField()
+    # Link to attendance records for late days or other calculations
+    attendance_records = models.ManyToManyField(Attendance, related_name="performance_records")
 
