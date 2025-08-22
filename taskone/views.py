@@ -2,20 +2,28 @@ from rest_framework import viewsets
 from .models import Employee, Department, Attendance, Performance
 from .serializers import EmployeeSerializer, DepartmentSerializer, AttendanceSerializer, PerformanceSerializer
 from django_filters.rest_framework import DjangoFilterBackend  # <-- add this
+from .throttles import StandardUserThrottle, StandardAnonThrottle  # <-- import here
+
+
 
 class DepartmentViewSet(viewsets.ModelViewSet):
     queryset = Department.objects.all()
     serializer_class = DepartmentSerializer
+    throttle_classes = [StandardUserThrottle, StandardAnonThrottle]
+
 
 class EmployeeViewSet(viewsets.ModelViewSet):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
+    throttle_classes = [StandardUserThrottle, StandardAnonThrottle]
+
 
 class AttendanceViewSet(viewsets.ModelViewSet):
     queryset = Attendance.objects.all()
     serializer_class = AttendanceSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['employee', 'date'] 
+    throttle_classes = [StandardUserThrottle, StandardAnonThrottle]
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -33,4 +41,5 @@ class AttendanceViewSet(viewsets.ModelViewSet):
 class PerformanceViewSet(viewsets.ModelViewSet):
     queryset = Performance.objects.all()
     serializer_class = PerformanceSerializer
+    throttle_classes = [StandardUserThrottle, StandardAnonThrottle]
 
